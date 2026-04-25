@@ -8,10 +8,11 @@ import (
 	"os/signal"
 	"restService/config"
 	"restService/internals/bootstrap"
-	"restService/internals/model"
 	"restService/router"
 	"syscall"
 	"time"
+
+	"github.com/golang-migrate/migrate/v4"
 )
 
 func main() {
@@ -27,8 +28,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Auto Migration
-	db.AutoMigrate(&model.User{})
+	// ── Migrations ───────────────────────────────────────────────────────
+	m, err := migrate.New("file://db/migrations", cfg.GetDsnURL())
+	if err != nil {
+		panic("impossible application state: migration initialization failed")
+	}
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		panic("impossible application state: database migration failed")
+	}
 
 	app := bootstrap.Register(db)
 

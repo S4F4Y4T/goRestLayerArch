@@ -13,6 +13,7 @@ type Config struct {
 	DBUser      string
 	DBPassword  string
 	DBName      string
+	Dsn         string
 }
 
 func Load() (*Config, error) {
