@@ -15,5 +15,5 @@ func SetUp(app *bootstrap.App) http.Handler {
 
 	RegisterUserRoute(mux, app.UserHandler)
 
-	return middleware.Apply(middleware.Logger, middleware.Cors)(mux)
+	return middleware.Apply(middleware.Logger, middleware.Cors, middleware.Recover)(mux)
 }

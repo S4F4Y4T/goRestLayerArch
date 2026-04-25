@@ -12,7 +12,11 @@ func RegisterUserRoute(mux *http.ServeMux, handler *handler.UserHandler) {
 		w.Write([]byte("pong from user"))
 	})
 
-	userHandler.HandleFunc("/", handler.GetUser)
+	userHandler.HandleFunc("GET /", handler.GetAllUser)
+	userHandler.HandleFunc("GET /{id}", handler.GetUser)
+	userHandler.HandleFunc("POST /", handler.CreateUser)
+	userHandler.HandleFunc("PUT /", handler.UpdateUser)
+	userHandler.HandleFunc("DELETE /", handler.DeleteUser)
 
 	mux.Handle("/users/", http.StripPrefix("/users", userHandler))
 }
