@@ -1,0 +1,53 @@
+services:
+  app:
+    build: .
+    container_name: rest_api_app
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - PORT=${PORT}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - rest_network
+
+  db:
+    image: postgres:16-alpine
+    container_name: rest_api_db
+    ports:
+      - "5433:5432" # Host 5433 to avoid conflict with local postgres if any
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rest_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: rest_api_pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    depends_on:
+      - db
+    networks:
+      - rest_network
+
+networks:
+  rest_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

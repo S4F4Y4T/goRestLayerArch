@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"restService/config"
 	"restService/internals/bootstrap"
+	"restService/internals/model"
 	"restService/router"
 	"syscall"
 	"time"
@@ -20,7 +21,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	app := bootstrap.Register()
+	db, err := config.ConnectDB(cfg)
+	if err != nil {
+		fmt.Printf("Failed to connect to database: %v", err)
+		os.Exit(1)
+	}
+
+	// Auto Migration
+	db.AutoMigrate(&model.User{})
+
+	app := bootstrap.Register(db)
+
 	mux := router.SetUp(app)
 
 	srv := &http.Server{
