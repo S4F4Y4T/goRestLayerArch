@@ -10,4 +10,6 @@ type UserRepository interface {
 	Create(user *User) error
 	FindAll() ([]User, error)
 	FindByID(id uint) (*User, error)
+	Update(user *User) error
+	Delete(user *User) error
 }

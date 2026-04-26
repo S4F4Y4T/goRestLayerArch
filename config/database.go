@@ -17,6 +17,6 @@ func ConnectDB(cfg *Config) (*gorm.DB, error) {
 }
 
 func (cfg *Config) GetDsnURL() string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable TimeZone=Asia/Dhaka",
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&TimeZone=Asia/Dhaka",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 }

@@ -2,20 +2,18 @@ package service
 
 import (
 	"restService/internals/model"
-	"restService/internals/repository"
 )
 
 type UserService struct {
-	repo *repository.UserRepository
+	repo model.UserRepository
 }
 
-func NewUserService(repo *repository.UserRepository) *UserService {
+func NewUserService(repo model.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) GetAllUser() []model.User {
-	users, _ := s.repo.FindAll()
-	return users
+func (s *UserService) GetAllUser() ([]model.User, error) {
+	return s.repo.FindAll()
 }
 
 func (s *UserService) GetUser(id uint) (*model.User, error) {

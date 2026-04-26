@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -31,7 +33,7 @@ func main() {
 	// ── Migrations ───────────────────────────────────────────────────────
 	m, err := migrate.New("file://db/migrations", cfg.GetDsnURL())
 	if err != nil {
-		panic("impossible application state: migration initialization failed")
+		panic(fmt.Sprintf("impossible application state: migration initialization failed: %v", err))
 	}
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		panic("impossible application state: database migration failed")

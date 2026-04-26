@@ -8,15 +8,15 @@ import (
 func RegisterUserRoute(mux *http.ServeMux, handler *handler.UserHandler) {
 	userHandler := http.NewServeMux()
 
-	userHandler.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+	userHandler.HandleFunc("GET /ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("pong from user"))
 	})
 
 	userHandler.HandleFunc("GET /", handler.GetAllUser)
 	userHandler.HandleFunc("GET /{id}", handler.GetUser)
 	userHandler.HandleFunc("POST /", handler.CreateUser)
-	userHandler.HandleFunc("PUT /", handler.UpdateUser)
-	userHandler.HandleFunc("DELETE /", handler.DeleteUser)
+	userHandler.HandleFunc("PUT /{id}", handler.UpdateUser)
+	userHandler.HandleFunc("DELETE /{id}", handler.DeleteUser)
 
 	mux.Handle("/users/", http.StripPrefix("/users", userHandler))
 }
